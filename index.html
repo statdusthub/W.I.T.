@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>W.I.T. - Words Shape Thinking</title>
+  <title>W.I.T.</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -2001,7 +2001,7 @@
         csvContent += `${data.day},"${data.english}","${meanings}","${synonyms}",${data.count},${firstDate},${lastDate},"${missedStr}"\n`;
       }
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
 
