@@ -937,6 +937,12 @@
      ************************************************************/
     let words = {};
 
+    // 로컬 시간 기준 날짜 반환 (YYYY-MM-DD)
+    function getLocalToday() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    }
+
     /************************************************************
      * 2. 상태 변수
      ************************************************************/
@@ -1519,7 +1525,7 @@
         if (currentExamMode === 'real') {
           const wordDay = item.day || currentDays[0];
           const key = `${wordDay}-${item.english}`;
-          const today = new Date().toISOString().split('T')[0];
+          const today = getLocalToday();
 
           // 부분 정답에서 못 맞힌 뜻 목록
           const missedThisTime = correctAnswers.filter(ans => !correctNorm.includes(normalizeFunc(ans)) || !userResults.find(r => r.isCorrect && normalizeFunc(r.input) === normalizeFunc(ans)));
@@ -1569,7 +1575,7 @@
         if (currentExamMode === 'real') {
           const wordDay = item.day || currentDays[0];
           const key = `${wordDay}-${item.english}`;
-          const today = new Date().toISOString().split('T')[0];
+          const today = getLocalToday();
           if (wrongWords[key]) {
             wrongWords[key].count++;
             wrongWords[key].lastDate = today;
@@ -1634,7 +1640,7 @@
         if (currentExamMode === 'real') {
           const wordDay = item.day || currentDays[0];
           const key = `${wordDay}-${item.english}`;
-          const today = new Date().toISOString().split('T')[0];
+          const today = getLocalToday();
           // 건너뛰기: 현재 모드에 해당하는 모든 정답을 missedDetails에 기록
           const skippedAnswers = currentMode === 'meaning' ? (item.meanings || []) : (item.synonyms || []);
           if (wrongWords[key]) {
@@ -2083,7 +2089,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalToday();
       link.href = url;
       link.download = `틀린단어기록_${today}.csv`;
       document.body.appendChild(link);
