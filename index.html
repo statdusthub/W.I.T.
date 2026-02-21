@@ -48,7 +48,7 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 20px;
     }
     .card {
@@ -57,9 +57,10 @@
       border-radius: 20px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.15);
       width: 100%;
-      max-width: 500px;
+      max-width: 430px;
       color: var(--text-main);
       border: 1px solid var(--border);
+      margin: auto 0;
     }
     /* Dark mode: 카드 전체 블루 글로우 */
     body:not(.light) .card {
@@ -68,7 +69,7 @@
         0 0 30px rgba(79,70,229,0.15);
     }
     h1 {
-      margin: 0 0 24px;
+      margin: 0 0 12px;
       font-size: 28px;
       text-align: center;
       color: var(--text-strong);
@@ -77,12 +78,12 @@
       letter-spacing: 0.02em;
     }
     .setup-section {
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
     .row {
       display: flex;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .field {
       flex: 1;
@@ -91,14 +92,14 @@
       font-size: 14px;
       font-weight: 600;
       color: var(--text-main);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       display: block;
     }
     select, input[type="text"], input[type="number"] {
       width: 100%;
-      padding: 12px;
+      padding: 9px 12px;
       border-radius: 10px;
-      border: 2px solid var(--border);
+      border: 1px solid var(--border);
       background: var(--panel-bg);
       color: var(--text-strong);
       font-size: 15px;
@@ -128,7 +129,7 @@
     }
     button {
       flex: 1;
-      padding: 14px;
+      padding: 11px;
       border-radius: 10px;
       border: none;
       font-size: 15px;
@@ -604,8 +605,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      margin-bottom: 24px;
+      gap: 4px;
+      margin-bottom: 12px;
     }
 
     .lexio-title span {
@@ -614,24 +615,24 @@
 
     .wit-main {
       font-family: "Bebas Neue", "Impact", sans-serif;
-      font-size: 52px;
+      font-size: 42px;
       font-weight: 400;
       letter-spacing: 0.12em;
       color: var(--text-strong);
       line-height: 1;
     }
     .wit-fullname {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 500;
       letter-spacing: 0.18em;
       color: var(--text-muted);
       text-transform: uppercase;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       margin-top: 2px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .lexio-subtitle {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 400;
       letter-spacing: 0.04em;
       color: var(--text-muted);
@@ -647,7 +648,7 @@
       <span class="wit-fullname">Words – Intelligence – Training</span>
       <span class="lexio-subtitle">Words Shape Thinking</span>
     </h1>
-    <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
       <button id="themeToggle" style="border-radius: 20px; padding: 6px 12px; cursor: pointer; font-size: 12px;">
         🌙 Dark
       </button>
@@ -655,26 +656,52 @@
 
     <div class="setup-section" id="setupSection">
       <div style="
-        margin-bottom: 20px;
-        padding: 16px;
+        margin-bottom: 12px;
+        padding: 12px 16px;
         background: var(--panel-bg-strong);
         border-radius: 12px;
         border: 1px solid var(--border);
       ">
-        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-main);">
-          📁 파일 업로드 (엑셀 또는 CSV)
-        </label>
-        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"
-          style="
-            width: 100%;
-            padding: 12px;
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label style="font-weight: 600; color: var(--text-main); margin: 0;">
+            📁 파일 업로드
+          </label>
+          <button id="downloadTemplateBtn" style="
+            padding: 2px 10px;
+            border-radius: 6px;
             border: 1px dashed var(--border);
-            border-radius: 10px;
-            background: var(--panel-bg);
-            color: var(--text-main);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
-          ">
-        <div style="margin-top: 8px;">
+            transition: background 0.15s;
+            white-space: nowrap;
+            line-height: 1.6;
+            width: 95px;
+            min-width: 95px;
+            max-width: 100px;
+            flex: none;
+            box-sizing: border-box;
+            margin-right: 0;
+          ">📥 CSV 양식</button>
+        </div>
+        <!-- 파일 선택 -->
+        <div style="display: flex; gap: 8px; align-items: stretch;">
+          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"
+            style="
+              flex: 1;
+              min-width: 0;
+              padding: 8px 10px;
+              border: 1px solid #9ca3af;
+              border-radius: 8px;
+              background: var(--card-bg);
+              color: var(--text-main);
+              cursor: pointer;
+              font-size: 13px;
+            ">
+        </div>
+        <div style="margin-top: 6px;">
           <button id="fileDetailToggleBtn" onclick="(function(){const p=document.getElementById('fileDetailPanel');const a=document.getElementById('fileDetailArrow');const open=p.style.display!=='none';p.style.display=open?'none':'block';a.textContent=open?'▶':'▼';})()" style="
             background: none;
             border: none;
@@ -689,27 +716,13 @@
           ">
             <span id="fileDetailArrow">▶</span> 상세 설명
           </button>
-          <div id="fileDetailPanel" style="display: none; margin-top: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.8;">
+          <div id="fileDetailPanel" style="display: none; margin-top: 6px; font-size: 11px; color: var(--text-muted); line-height: 1.8;">
             💡 파일 형식: <strong style="color: var(--text-main);">Category | Words | Meanings | Synonyms</strong><br>
             📄 지원 형식: .xlsx, .xls, .csv<br>
             ✏️ 여러 개의 뜻/동의어는 <strong style="color: var(--text-main);">콤마(,)</strong>로 구분해서 입력하세요<br>
             &nbsp;&nbsp;&nbsp;&nbsp;예) Meanings: <em>버리다, 포기하다</em> &nbsp;/&nbsp; Synonyms: <em>desert, give up</em>
           </div>
         </div>
-        <!-- CSV 양식 다운로드 (단독) -->
-        <button id="downloadTemplateBtn" style="
-          margin-top: 10px;
-          width: 100%;
-          padding: 9px 12px;
-          border-radius: 8px;
-          border: 1px solid;
-          background: none;
-          color: var(--text-muted);
-          font-size: 12px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.15s;
-        ">📥 CSV 양식</button>
         <!-- 단어 현황 + 초기화 두 번째 줄 -->
         <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
           <div id="savedWordsStatus" style="display:none; flex: 8; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); justify-content: center; align-items: center; min-width: 0;">
@@ -733,8 +746,8 @@
         </div>
       </div>
 
-      <div class="field" style="margin-bottom: 16px;">
-        <label>Category 선택 (여러 개 선택 가능)</label>
+      <div class="field" style="margin-bottom: 10px;">
+        <label>Category 선택 (복수 선택 가능)</label>
         <div class="day-selector">
           <div class="day-selector-header" id="daySelectorHeader">
             <span class="selected-days-preview" id="selectedDaysPreview">선택하세요</span>
@@ -763,17 +776,15 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" style="margin-top: 6px;">
         <div class="field">
           <label for="questionCount">문제 개수 <span style="font-size: 12px; color: #666; font-weight: normal;">💡 0 입력 시 전체 문제 출제</span></label>
-          <input type="number" id="questionCount" min="0" value="0" placeholder="0" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e0e0e0; font-size: 15px; outline: none; transition: all 0.2s;"
-                 onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102,126,234,0.1)'"
-                 onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'" />
+          <input type="number" id="questionCount" min="0" value="0" placeholder="0" />
           <div id="questionCountWarning" style="display: none; margin-top: 6px; font-size: 12px; color: #dc3545; font-weight: 600;"></div>
         </div>
       </div>
 
-      <button class="btn-start" id="startBtn" style="margin-top: 20px;">시험 시작하기 🚀</button>
+      <button class="btn-start" id="startBtn" style="margin-top: 10px;">시험 시작하기 🚀</button>
 
       <div class="hint">
         💡 <strong>연습모드</strong>에서는 틀린 문제가 저장되지 않습니다.<br>
