@@ -872,6 +872,14 @@
         </div>
       </div>
 
+      <div class="field" style="margin-bottom: 12px;">
+        <label for="wrongModeSelect">시험 유형</label>
+        <select id="wrongModeSelect">
+          <option value="meaning">뜻 쓰기 (영→한)</option>
+          <option value="synonym">동의어 (영→영)</option>
+        </select>
+      </div>
+
       <div class="buttons">
         <button class="btn-start btn-wrong-quiz" id="startWrongWordsQuizBtn">📝 틀린 단어로 시험 보기</button>
       </div>
@@ -984,6 +992,7 @@
     const wrongWordsFile = document.getElementById("wrongWordsFile");
     const startWrongWordsQuizBtn = document.getElementById("startWrongWordsQuizBtn");
     const startWrongWordsQuizBtnHome = document.getElementById("startWrongWordsQuizBtnHome");
+    const wrongModeSelect = document.getElementById("wrongModeSelect");
     const wrongWordsBtnsContainer = document.getElementById("wrongWordsBtnsContainer");
 
     /************************************************************
@@ -1527,6 +1536,9 @@
             for (const m of missed) {
               wrongWords[key].missedDetails[m] = (wrongWords[key].missedDetails[m] || 0) + 1;
             }
+            // mode 누적
+            if (!wrongWords[key].modes) wrongWords[key].modes = {};
+            wrongWords[key].modes[currentMode] = (wrongWords[key].modes[currentMode] || 0) + 1;
           } else {
             const missedDetails = {};
             for (const m of missed) missedDetails[m] = 1;
@@ -1538,7 +1550,8 @@
               count: 1,
               firstDate: today,
               lastDate: today,
-              missedDetails
+              missedDetails,
+              modes: { [currentMode]: 1 }
             };
           }
           saveWrongWords();
@@ -1564,6 +1577,9 @@
             for (const ans of correctAnswers) {
               wrongWords[key].missedDetails[ans] = (wrongWords[key].missedDetails[ans] || 0) + 1;
             }
+            // mode 누적
+            if (!wrongWords[key].modes) wrongWords[key].modes = {};
+            wrongWords[key].modes[currentMode] = (wrongWords[key].modes[currentMode] || 0) + 1;
           } else {
             const missedDetails = {};
             for (const ans of correctAnswers) missedDetails[ans] = 1;
@@ -1575,7 +1591,8 @@
               count: 1,
               firstDate: today,
               lastDate: today,
-              missedDetails
+              missedDetails,
+              modes: { [currentMode]: 1 }
             };
           }
           saveWrongWords();
@@ -1946,14 +1963,22 @@
         return;
       }
 
-      // 필터링된 틀린 단어만 가져오기
+      // 선택한 시험 유형 (틀린 단어 목록 페이지에서 선택한 값, 홈에서는 modeSelect 기준)
+      const selectedMode = wrongModeSelect ? wrongModeSelect.value : modeSelect.value;
+
+      // 필터링된 틀린 단어만 가져오기 (Category 필터)
       let filteredWrongWords = Object.values(wrongWords);
       if (filterDay !== 'all') {
         filteredWrongWords = filteredWrongWords.filter(word => String(word.day) === String(filterDay));
       }
 
+      // 선택한 시험 유형에서 틀린 단어만 필터링
+      filteredWrongWords = filteredWrongWords.filter(word =>
+        !word.modes || word.modes[selectedMode]
+      );
+
       if (filteredWrongWords.length === 0) {
-        alert('선택한 Category에 틀린 단어가 없습니다!');
+        alert('선택한 시험 유형에서 틀린 단어가 없습니다!');
         return;
       }
 
@@ -1966,7 +1991,7 @@
       }));
 
       // 시험 모드 설정
-      currentMode = modeSelect.value;
+      currentMode = selectedMode;
       currentExamMode = "real"; // 틀린 단어 복습도 실전 모드로 (틀린 횟수 업데이트)
       currentDays = [...new Set(filteredWrongWords.map(w => String(w.day)))].sort((a, b) => {
         const na = Number(a), nb = Number(b);
