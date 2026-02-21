@@ -728,7 +728,7 @@
           </div>
         </div>
         <!-- 단어 현황 + 초기화 두 번째 줄 -->
-        <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
+        <div id="statusRow" style="margin-top: 8px; display: none; gap: 8px; align-items: center;">
           <div id="savedWordsStatus" style="display:none; flex: 8; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); justify-content: center; align-items: center; min-width: 0;">
             <span id="savedWordsInfo" style="font-size: 12px; color: var(--text-main); text-align: center; display: block;"></span>
           </div>
@@ -2289,6 +2289,8 @@
         infoEl.textContent = `${dayCount}개 Category · ${totalWords}개 단어`;
         statusEl.style.display = 'flex';
         if (clearBtn) clearBtn.style.display = '';
+        const statusRow = document.getElementById('statusRow');
+        if (statusRow) statusRow.style.display = 'flex';
 
         // 업로드 경고 숨기기
         const uploadWarning = document.getElementById('uploadWarning');
@@ -2296,6 +2298,8 @@
       } else {
         statusEl.style.display = 'none';
         if (clearBtn) clearBtn.style.display = 'none';
+        const statusRow = document.getElementById('statusRow');
+        if (statusRow) statusRow.style.display = 'none';
       }
     }
 
