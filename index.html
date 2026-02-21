@@ -872,6 +872,44 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
     /************************************************************
+     * 0. 인코딩 자동 감지 CSV 읽기 함수
+     * 맥 엑셀이 BOM 없이 저장하는 문제 대응
+     * UTF-8 → EUC-KR 순으로 시도, 한글 깨짐 자동 복구
+     ************************************************************/
+    function readFileWithEncoding(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const buffer = e.target.result;
+          const bytes = new Uint8Array(buffer);
+
+          // BOM 확인 (EF BB BF = UTF-8 BOM)
+          const hasBOM = bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF;
+
+          if (hasBOM) {
+            // BOM 있으면 UTF-8로 디코딩
+            resolve(new TextDecoder('utf-8').decode(buffer));
+          } else {
+            // BOM 없으면 UTF-8 시도 후 한글 깨짐 확인
+            const utf8Text = new TextDecoder('utf-8').decode(buffer);
+            // 깨진 문자(replacement character) 포함 여부 확인
+            const hasGarbled = utf8Text.includes('\uFFFD') ||
+              // 맥 엑셀 EUC-KR 저장 시 나타나는 패턴 감지
+              /[\xC0-\xFF][\x80-\xBF]/.test(utf8Text) === false &&
+              /[\x80-\xFF]/.test(utf8Text);
+            if (hasGarbled) {
+              // EUC-KR로 재시도
+              resolve(new TextDecoder('euc-kr').decode(buffer));
+            } else {
+              resolve(utf8Text);
+            }
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    /************************************************************
      * 1. 단어 데이터 (엑셀 파일 업로드 필요)
      ************************************************************/
     let words = {};
@@ -947,8 +985,8 @@
         let jsonData = [];
 
         if (isCSV) {
-          // CSV 파일 처리
-          const text = await file.text();
+          // CSV 파일 처리 (인코딩 자동 감지 - 맥 엑셀 한글 깨짐 대응)
+          const text = await readFileWithEncoding(file);
           const result = Papa.parse(text, {
             header: true,
             skipEmptyLines: true,
@@ -2027,7 +2065,8 @@
       if (!file) return;
 
       try {
-        const text = await file.text();
+        // 인코딩 자동 감지 (맥 엑셀 한글 깨짐 대응)
+        const text = await readFileWithEncoding(file);
         const result = Papa.parse(text, {
           header: true,
           skipEmptyLines: true,
