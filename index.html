@@ -1253,7 +1253,7 @@
       const totalWordCount = selectedDays.reduce((sum, day) => sum + (words[day] ? words[day].length : 0), 0);
       if (countValue > totalWordCount) {
         const warningEl = document.getElementById("questionCountWarning");
-        warningEl.textContent = `⚠️ 선택한 Category의 단어 수(${totalWordCount}개)를 초과했습니다. 다시 입력해주세요.`;
+        warningEl.textContent = `⚠️ 선택한 단어 수(${totalWordCount}개)를 초과했습니다. 다시 입력해주세요.`;
         warningEl.style.display = "block";
         questionCount.focus();
         return;
